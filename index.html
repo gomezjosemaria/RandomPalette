@@ -1,0 +1,181 @@
+<!DOCUMENT html>
+<html>
+    <head>
+        <link rel="stylesheet" type="text/css" href="style.css">
+    </head>
+    <body>
+        <div id="topNavDiv">
+            <button id="randomButton" onclick="randomPalette()"></button>
+        </div>
+        <div id="paletteDiv"></div>
+        <script src="./RandomPalette.js"></script>
+        <script>
+            
+            var i, aux_rgb, hex_string, n_colors, first_color, last_color, palette, paletteDiv, paletteColumnDiv, colorTextButton, paletteColumns;
+            
+            n_colors = 6;
+            
+            first_color = new HSL(Math.floor(Math.random() * 360),Math.floor(Math.random() * 100),Math.floor(Math.random() * 100));
+            last_color = new HSL(Math.floor(Math.random() * 360),Math.floor(Math.random() * 100),Math.floor(Math.random() * 100));
+            
+            palette = new Palette(first_color, last_color, n_colors);
+            
+            paletteColumns = [];
+            
+            paletteDiv = document.getElementById("paletteDiv");
+            
+            paletteColumnDiv = document.createElement('div');
+            paletteColumnDiv.className = "paletteColumn";
+            aux_rgb = hsltorgb(first_color.hue, first_color.saturation, first_color.lightness);
+            hex_string = rgbtohex(aux_rgb.r, aux_rgb.g, aux_rgb.b);
+            paletteColumnDiv.style.backgroundColor = hex_string;
+            paletteColumnDiv.style.width = ((100 / (n_colors + 2)).toString()).concat("vw");
+            
+            colorTextButton = document.createElement('button');
+            colorTextButton.className = "colorText";
+            colorTextButton.innerHTML = hex_string;
+            
+            paletteColumnDiv.appendChild(colorTextButton);
+            paletteColumns[0] = paletteColumnDiv;
+            paletteDiv.appendChild(paletteColumnDiv);
+            
+            for (i = 0; i < n_colors; i += 1) {
+                paletteColumnDiv = document.createElement('div');
+                paletteColumnDiv.className = "paletteColumn";
+                aux_rgb = hsltorgb(palette.colors[i].hue, palette.colors[i].saturation, palette.colors[i].lightness);
+                hex_string = rgbtohex(aux_rgb.r, aux_rgb.g, aux_rgb.b);
+                paletteColumnDiv.style.backgroundColor = hex_string;
+                paletteColumnDiv.style.width = ((100 / (n_colors + 2)).toString()).concat("vw");
+                
+                colorTextButton = document.createElement('button');
+                colorTextButton.className = "colorText";
+                colorTextButton.innerHTML = hex_string;
+                
+                paletteColumnDiv.appendChild(colorTextButton);
+                paletteColumns[i  + 1] = paletteColumnDiv;
+                paletteDiv.appendChild(paletteColumnDiv);
+            }
+            
+            paletteColumnDiv = document.createElement('div');
+            paletteColumnDiv.className = "paletteColumn";
+            aux_rgb = hsltorgb(last_color.hue, last_color.saturation, last_color.lightness);
+            hex_string = rgbtohex(aux_rgb.r, aux_rgb.g, aux_rgb.b);
+            paletteColumnDiv.style.backgroundColor = hex_string;
+            paletteColumnDiv.style.width = ((100 / (n_colors + 2)).toString()).concat("vw");
+            
+            colorTextButton = document.createElement('button');
+            colorTextButton.className = "colorText";
+            colorTextButton.innerHTML = hex_string;
+            
+            paletteColumnDiv.appendChild(colorTextButton);
+            paletteColumns[n_colors + 1] = paletteColumnDiv;
+            paletteDiv.appendChild(paletteColumnDiv);
+            
+            function randomPalette () {
+                
+                first_color = new HSL(Math.floor(Math.random() * 360),Math.floor(Math.random() * 100),Math.floor(Math.random() * 100));
+                last_color = new HSL(Math.floor(Math.random() * 360),Math.floor(Math.random() * 100),Math.floor(Math.random() * 100));
+                
+                palette = new Palette(first_color, last_color, n_colors);
+                
+                aux_rgb = hsltorgb(first_color.hue, first_color.saturation, first_color.lightness);
+                hex_string = rgbtohex(aux_rgb.r, aux_rgb.g, aux_rgb.b);
+                paletteColumns[0].style.background = hex_string;
+                
+                for (i = 0; i < n_colors; i += 1) {
+                    aux_rgb = hsltorgb(palette.colors[i].hue, palette.colors[i].saturation, palette.colors[i].lightness);
+                    hex_string = rgbtohex(aux_rgb.r, aux_rgb.g, aux_rgb.b);
+                    paletteColumns[i + 1].style.background = hex_string;
+                    console.log("%o", i + 1);
+                }
+                
+                aux_rgb = hsltorgb(last_color.hue, last_color.saturation, last_color.lightness);
+                hex_string = rgbtohex(aux_rgb.r, aux_rgb.g, aux_rgb.b);
+                paletteColumns[n_colors + 1].style.backgroundColor = hex_string;
+            }
+            
+            function rgbtohex (r, g, b) {
+                
+                var hex, rhex, ghex, bhex;
+                
+                rhex = Number(r).toString(16);
+                ghex = Number(g).toString(16);
+                bhex = Number(b).toString(16);
+                
+                if (rhex.length < 2) {
+                    rhex = "0" + rhex;
+                }
+                
+                if (ghex.length < 2) {
+                    ghex = "0" + ghex;
+                }
+                
+                if (bhex.length < 2) {
+                    bhex = "0" + bhex;
+                }
+                
+                hex = ("#").concat(rhex, ghex, bhex);
+                
+                return hex;
+            }
+            
+            function hsltorgb (h, s, l) {
+                
+                var c, x, m, aux_r, aux_g, aux_b;
+                
+                c = (1 - Math.abs(2 * l / 100 - 1)) * s / 100;
+                x = c * (1 - Math.abs(((h / 60) % 2) - 1));
+                m = l / 100 - c / 2;
+                
+                switch (true) {
+                    case h < 60:
+                        aux_r = c;
+                        aux_g = x;
+                        aux_b = 0;
+                        break;
+                    case h < 120:
+                        aux_r = x;
+                        aux_g = c;
+                        aux_b = 0;
+                        break;
+                    case h < 180:
+                        aux_r = 0;
+                        aux_g = c;
+                        aux_b = x;
+                        break;
+                    case h < 240:
+                        aux_r = 0;
+                        aux_g = x;
+                        aux_b = c;
+                        break;
+                    case h < 300:
+                        aux_r = x;
+                        aux_g = 0;
+                        aux_b = c;
+                        break;
+                    case h < 360:
+                        aux_r = c;
+                        aux_g = 0;
+                        aux_b = x;
+                        break;
+                    default:
+                        aux_r = 0;
+                        aux_g = 0;
+                        aux_b = 0;
+                        break;
+                }
+                
+                r = Math.round((aux_r + m) * 255);
+                g = Math.round((aux_g + m) * 255);
+                b = Math.round((aux_b + m) * 255);
+                
+                return {r : r, g : g, b : b};
+            }
+            
+            function copyHex () {
+                
+            }
+            
+        </script>
+    </body>
+</html>

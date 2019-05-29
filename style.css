@@ -1,0 +1,56 @@
+::-webkit-scrollbar {
+    display: none;
+}
+body {
+    margin: 0px;
+}
+#topNavDiv {
+    position: fixed;
+    width: 100vw;
+    height: 80px;
+    background: #fff;
+    box-shadow: 0px 4px 30px rgba(0, 0, 0, 0.2);
+    padding: 0 20px;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+#paletteDiv {
+    width: 100vw;
+    display: flex;
+    margin: 0px;
+    padding: 0px;
+    box-sizing: border-box;
+}
+#randomButton {
+    width: 40px;
+    height: 40px;
+}
+.paletteColumn {
+    height: 100vh;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    -webkit-transition-duration: 0.4s;
+    transition-duration: 0.4s;
+}
+.paletteColumn:hover {
+    width: 50vw !important;
+}
+.paletteColumn:hover .colorText {
+    opacity: 0.4;
+}
+.colorText {
+    opacity: 0;
+    transition: all 0.4s cubic-bezier(0.61, -0.44, 0.33, 1.39);
+    width: 100%;
+    border: none;
+    background-color: white;
+    color: black;
+    padding: 5%;
+    cursor: pointer;
+}
+.colorText:hover {
+    opacity: 1 !important;
+}
